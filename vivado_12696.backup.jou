@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sun Jul 10 23:00:38 2022
+# Process ID: 12696
+# Current directory: V:/home/tillm/src/mriscv
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent4460 V:\home\tillm\src\mriscv\mriscv.xpr
+# Log file: V:/home/tillm/src/mriscv/vivado.log
+# Journal file: V:/home/tillm/src/mriscv\vivado.jou
+# Running On: RAKETE, OS: Windows, CPU Frequency: 3200 MHz, CPU Physical cores: 12, Host memory: 17103 MB
+#-----------------------------------------------------------
+start_gui
+open_project V:/home/tillm/src/mriscv/mriscv.xpr
