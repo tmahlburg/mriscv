@@ -31,7 +31,6 @@ module instruction_decode (
 	output reg is_branch,
 
 	output reg is_alu,
-	output reg is_shift,
 	output reg [31:0] operand_a,
 	output reg [31:0] operand_b,
 	output reg [4:0] dest,
@@ -76,6 +75,8 @@ module instruction_decode (
 			end
 			/* I-type: short immediates, loads */
 			7'b1100111 || 7'b0000011 || 7'b0010011 || 7'b0001111 || 7'b1110011: begin
+				operand_a = rs1;
+				operand_b = {{20{instr[31]}}, instr[31:20]};
 				case (instr[6:0]) begin
 					7'b0000011: begin
 						is_load = 1'b1;
@@ -85,15 +86,17 @@ module instruction_decode (
 					end
 					7'b0010011: begin
 						is_alu = 1'b1;
+						/* is shift operation? operand_b = shamt */
+						if (func3 == 3'b001 || func3 == 3'b101) begin
+							operand_b = instr[24:20];
+						end
 					end
 				endcase
-				operand_a = rs1;
-				operand_b = {{20{instr[31]}}, instr[31:20]};
 			end
 			/* S-type: stores */
 			7'b0100011: begin
 				is_store = 1'b1;
-				operand_a_reg = instr[19:15] + {{20{instr[31]}}, instr[31:25], instr[11:7]};
+				operand_a = instr[19:15] + {{20{instr[31]}}, instr[31:25], instr[11:7]};
 				operand_b = rs2;
 			end
 			/* B-type: conditional branches */
