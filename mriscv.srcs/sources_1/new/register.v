@@ -9,6 +9,9 @@ module regs (
 );
 	reg [31:0] register [0:31];
 
+	/* register x0 is always 0 is riscv */
+	assign register[0] = 0;
+
 	assign rdata1 = register[raddr1];
 	assign rdata2 = register[raddr2];
 endmodule
