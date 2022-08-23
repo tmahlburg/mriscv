@@ -70,7 +70,6 @@ module instruction_decode (
 
 			is_branch = 1'b0;
 			is_jump = 1'b0;
-			is_link = 1'b0;
 			is_rel = 1'b0;
 
 			is_alu = 1'b0;
@@ -94,7 +93,6 @@ module instruction_decode (
 						7'b1100111: begin
 							is_jump = 1'b1;
 							is_rel = 1'b1;
-							is_link = 1'b1;
 						end
 						7'b0010011: begin
 							is_alu = 1'b1;
@@ -118,20 +116,12 @@ module instruction_decode (
 				/* U-type: long immediates */
 				7'b0110111 || 7'b0010111: begin
 					operand_a = {instr[31:12], 12'b000000000000};
-					case (instr[6:0]) begin
-						/* lui */
-						7'b0110111:
-							is_load = 1'b1;
-						/* aupic */
-						7'b0010111:
-							is_jump = 1'b1;
-					endcase
+					is_load = 1'b1;
 				end
 				/* J-type: unconditional jumps */
 				7'b1101111: begin
 					operand_a = {11'b00000000000, instr[31], instr[19:12], instr[20], instr[30:21]}
 					is_jump = 1'b1;
-					is_link = 1'b1;
 				end
 				default: ; /* unknown opcode */
 			endcase
