@@ -5,22 +5,31 @@ module execute (
 
 	input is_store,
 	input is_load,
+
 	input is_branch,
+	input is_jump,
+	input is_reg,
+
 	input is_alu,
 
 	input [31:0] operand_a,
 	input [31:0] operand_b,
 
-	input [4:0] dest,
+	input [4:0] dest_i,
+	output reg [4:0] dest_o,
 
 	input [2:0] func3,
 	input func7,
 
-	output reg [31:0] result
+	output reg [31:0] result,
+
+	input [31:0] curr_pc,
+	output reg [31:0] next_pc
 )
 
 	always @(posedge clk) begin
 		is_pc = 1'b0;
+		dest_i = dest_0;
 
 		case 1'b1 begin
 			is_store: ; /* TODO */
@@ -28,6 +37,19 @@ module execute (
 			is_load: ; /* TODO */
 
 			is_branch: ; /* TODO */
+
+			is_jump: begin
+				result = curr_pc + 4;
+				/* when there is no destination specified, register x1 is assumed */
+				if (dest_i == 5'b00000) begin
+					dest_o = 5'b00001;
+				end
+				if (is_reg) begin
+					next_pc = (operand_a + operand_b) & ~1;
+				end else begin
+					next_pc = curr_pc + operand_a;
+				end
+			end
 
 			is_alu: begin
 				case func3
