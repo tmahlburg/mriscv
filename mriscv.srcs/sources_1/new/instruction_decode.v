@@ -36,6 +36,7 @@ module instruction_decode (
 	output reg is_alu,
 	output reg [31:0] operand_a,
 	output reg [31:0] operand_b,
+	output [31:0] branch_dest,
 	output [4:0] dest,
 
 	output [2:0] func3,
@@ -60,6 +61,7 @@ module instruction_decode (
 	assign func7 = instr[30];
 
 	assign dest = instr[11:7];
+	assign branch_dest = {{10{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
 
 	/* instr decode */
 	always @(posedge clk) begin
@@ -111,6 +113,8 @@ module instruction_decode (
 				end
 				/* B-type: conditional branches */
 				7'b1100011: begin
+					operand_a = rs1;
+					operand_b = rs2;
 					is_branch = 1'b1;
 				end
 				/* U-type: long immediates */
