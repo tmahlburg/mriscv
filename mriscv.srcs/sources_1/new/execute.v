@@ -26,7 +26,7 @@ module execute (
 
 	input [31:0] curr_pc,
 	output reg [31:0] next_pc
-) begin
+);
 	/* helper register to check for branch */
 	reg branch;
 
