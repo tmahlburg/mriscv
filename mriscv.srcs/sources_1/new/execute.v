@@ -31,19 +31,18 @@ module execute (
 	reg branch;
 
 	always @(posedge clk) begin
-		is_pc = 1'b0;
-		dest_i = dest_0;
+		dest_o = dest_i;
 		branch = 1'b0;
 
 		next_pc = curr_pc + 4;
 
-		case 1'b1 begin
+		case (1'b1)
 			is_store: ; /* TODO */
 
 			is_load: ; /* TODO */
 
 			is_branch: begin
-				case func3 begin
+				case (func3)
 					/* beq */
 					3'b000: branch = (operand_a == operand_b);
 					/* bne */
@@ -56,7 +55,7 @@ module execute (
 					3'b110: branch = ($unsigned(operand_a) < $unsigned(operand_b));
 					/* bgeu */
 					3'b111: branch = ($unsigned(operand_a) >= $unsigned(operand_b));
-				end
+				endcase
 				if (branch) begin
 					next_pc = curr_pc + branch_dest;
 				end
@@ -75,12 +74,12 @@ module execute (
 			end
 
 			is_alu: begin
-				case func3
+				case (func3)
 					/* add */
 					3'b000: begin
 						if (func7 === 1'b0) begin
 							result = operand_a + operand_b;
-						end else
+						end else begin
 							result = operand_a - operand_b;
 						end
 					end
