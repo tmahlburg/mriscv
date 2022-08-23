@@ -31,7 +31,7 @@ module instruction_decode (
 	output reg is_branch,
 	output reg is_jump,
 	output reg is_link,
-	output reg is_rel,
+	output reg is_reg,
 
 	output reg is_alu,
 	output reg [31:0] operand_a,
@@ -92,7 +92,7 @@ module instruction_decode (
 						/* jalr */
 						7'b1100111: begin
 							is_jump = 1'b1;
-							is_rel = 1'b1;
+							is_reg = 1'b1;
 						end
 						7'b0010011: begin
 							is_alu = 1'b1;
