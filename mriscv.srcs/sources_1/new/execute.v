@@ -12,8 +12,9 @@ module execute (
 
 	input is_alu,
 
-	input [31:0] operand_a,
-	input [31:0] operand_b,
+	input signed [31:0] operand_a,
+	input signed [31:0] operand_b,
+	input [31:0] branch_dest,
 
 	input [4:0] dest_i,
 	output reg [4:0] dest_o,
@@ -25,19 +26,41 @@ module execute (
 
 	input [31:0] curr_pc,
 	output reg [31:0] next_pc
-)
+) begin
+	/* helper register to check for branch */
+	reg branch;
 
 	always @(posedge clk) begin
 		is_pc = 1'b0;
 		dest_i = dest_0;
+		branch = 1'b0;
+
+		next_pc = curr_pc + 4;
 
 		case 1'b1 begin
 			is_store: ; /* TODO */
 
 			is_load: ; /* TODO */
 
-			is_branch: ; /* TODO */
-
+			is_branch: begin
+				case func3 begin
+					/* beq */
+					3'b000: branch = (operand_a == operand_b);
+					/* bne */
+					3'b001: branch = (operand_a != operand_b);
+					/* blt */
+					3'b100: branch = (operand_a < operand_b);
+					/* bge */
+					3'b101: branch = (operand_a >= operand_b);
+					/* bltu */
+					3'b110: branch = ($unsigned(operand_a) < $unsigned(operand_b));
+					/* bgeu */
+					3'b111: branch = ($unsigned(operand_a) >= $unsigned(operand_b));
+				end
+				if (branch) begin
+					next_pc = curr_pc + branch_dest;
+				end
+			end
 			is_jump: begin
 				result = curr_pc + 4;
 				/* when there is no destination specified, register x1 is assumed */
