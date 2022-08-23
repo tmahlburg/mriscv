@@ -47,7 +47,7 @@ module instruction_decode (
 	input [31:0] rdata2,
 
 	output [4:0] raddr1,
-	output [4:0] raddr1
+	output [4:0] raddr2
 );
 	wire [31:0] rs1, rs2;
 
@@ -66,17 +66,16 @@ module instruction_decode (
 	/* instr decode */
 	always @(posedge clk) begin
 		if (!reset) begin
-			operator = instr[6:0];
 			is_store = 1'b0;
 			is_load = 1'b0;
 
 			is_branch = 1'b0;
 			is_jump = 1'b0;
-			is_rel = 1'b0;
+			is_reg = 1'b0;
 
 			is_alu = 1'b0;
 
-			case (instr[6:0]) begin
+			case (instr[6:0])
 				/* R-type: register-register */
 				7'b0110011: begin
 					operand_a = rs1;
@@ -87,7 +86,7 @@ module instruction_decode (
 				7'b1100111 || 7'b0000011 || 7'b0010011 || 7'b0001111 || 7'b1110011: begin
 					operand_a = rs1;
 					operand_b = {{20{instr[31]}}, instr[31:20]};
-					case (instr[6:0]) begin
+					case (instr[6:0])
 						7'b0000011: begin
 							is_load = 1'b1;
 						end
@@ -124,7 +123,7 @@ module instruction_decode (
 				end
 				/* J-type: unconditional jumps */
 				7'b1101111: begin
-					operand_a = {11'b00000000000, instr[31], instr[19:12], instr[20], instr[30:21]}
+					operand_a = {11'b00000000000, instr[31], instr[19:12], instr[20], instr[30:21]};
 					is_jump = 1'b1;
 				end
 				default: ; /* unknown opcode */
