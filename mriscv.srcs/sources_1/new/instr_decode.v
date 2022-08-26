@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module instruction_decode (
+module instr_decode (
 	input clk, reset,
 
 	input [31:0] instr,
@@ -30,15 +30,14 @@ module instruction_decode (
 
 	output reg is_branch,
 	output reg is_jump,
-	output reg is_link,
 	output reg is_reg,
 
 	output reg is_alu,
+
 	output reg [31:0] operand_a,
 	output reg [31:0] operand_b,
 	output [31:0] branch_dest,
 	output [4:0] dest,
-
 	output [2:0] func3,
 	output func7,
 
