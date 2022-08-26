@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module execute (
-	input clk, resetn,
+	input clk, reset,
 
 	input is_store,
 	input is_load,
@@ -15,7 +15,6 @@ module execute (
 	input signed [31:0] operand_a,
 	input signed [31:0] operand_b,
 	input [31:0] branch_dest,
-
 	input [4:0] dest_i,
 	output reg [4:0] dest_o,
 
