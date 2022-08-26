@@ -1,1 +1,5 @@
 vivado*
+mriscv.cache/*
+mriscv.hw/*
+mriscv.runs/*
+*.xpr
