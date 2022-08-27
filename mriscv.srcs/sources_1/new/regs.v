@@ -3,7 +3,7 @@
 module regs (
 	input clk, w_en,
 
-	input [5:0] waddr,
+	input [4:0] waddr,
 	input [4:0] raddr1,
 	input [4:0] raddr2,
 
@@ -18,7 +18,7 @@ module regs (
 
 	always @(posedge clk) begin
 		if (w_en) begin
-			regs[waddr[4:0]] <= wdata;
+			register[waddr] <= wdata;
 		end
 	end
 endmodule
