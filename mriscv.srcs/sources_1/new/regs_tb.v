@@ -40,6 +40,8 @@ module regs_tb();
 		pass = 0;
 		fail = 0;
 
+		#10;
+
 		if (rdata1 === 0 && rdata2 === 0) begin
 			$display("PASSED: x0 is zero on startup");
 			pass = pass + 1;
@@ -85,6 +87,8 @@ module regs_tb();
 
 		waddr = 0;
 		raddr1 = 0;
+
+		#10;
 
 		if (rdata1 === 0) begin
 			$display("PASSED: x0 always zero");
