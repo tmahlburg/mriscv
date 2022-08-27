@@ -64,7 +64,24 @@ module instr_decode (
 
 	/* instr decode */
 	always @(posedge clk) begin
-		if (!reset) begin
+		if (reset) begin
+			is_store = 1'b0;
+			is_load = 1'b0;
+			is_branch = 1'b0;
+			is_jump = 1'b0;
+			is_reg = 1'b0;
+			is_alu = 1'b0;
+
+			operand_a = 0;
+			operand_b = 0;
+			branch_dest = 0;
+			dest = 0;
+			func3 = 0;
+			func7 = 0;
+
+			raddr1 = 0;
+			raddr2 = 0;
+		end else begin
 			is_store = 1'b0;
 			is_load = 1'b0;
 
