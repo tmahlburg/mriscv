@@ -27,6 +27,7 @@ module instr_decode_tb ();
 	integer pass_count;
 	integer fail_count;
 
+	/* adjust according to the number of test cases */
 	localparam test_count = 0;
 
 	reg [31:0] clk_period;
@@ -53,13 +54,33 @@ module instr_decode_tb ();
 		.raddr2(raddr2)
 	);
 
+	regs regs (
+		.raddr1(raddr1),
+		.raddr2(raddr2),
+		.rdata1(rdata1),
+		.rdata2(rdata2)
+	);
 
 	initial begin
 		$dumpfile("instr_decode_tb.vcd");
 		$dumpvars(0, instr_decode_tb);
 
+		reset = 0;
+		clk = 0;
+		clk_period = 10;
 
-		$display("%0d/%0d PASSED", pass_count, (total + 1));
+		pass_count = 0;
+		fail_count = 0;
+
+		if ((pass_count + fail_count) == total) begin
+			$display("PASSED: number of test cases");
+			pass_count = pass_count + 1;
+		end else begin
+			$display("FAILED: number of test cases");
+			fail_count = fail_count + 1;
+		end
+
+		$display("%0d/%0d PASSED", pass_count, (test_count + 1));
 		$finish;
 	end
 
