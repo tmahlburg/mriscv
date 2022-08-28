@@ -31,17 +31,17 @@ module instr_decode (
 );
 	wire [31:0] rs1, rs2;
 
-	assign raddr1 = instr[19:15];
-	assign raddr2 = instr[24:20];
+	assign raddr1 = reset ? 0 : instr[19:15];
+	assign raddr2 = reset ? 0 : instr[24:20];
 
 	assign rs1 = rdata1;
 	assign rs2 = rdata2;
 
-	assign func3 = instr[14:12];
-	assign func7 = instr[30];
+	assign func3 = reset ? 0 : instr[14:12];
+	assign func7 = reset ? 0 : instr[30];
 
-	assign dest = instr[11:7];
-	assign branch_dest = {{10{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
+	assign dest = reset ? 0 : instr[11:7];
+	assign branch_dest = reset ? 0 : {{10{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
 
 	/* instr decode */
 	always @(posedge clk) begin
@@ -55,13 +55,6 @@ module instr_decode (
 
 			operand_a <= 0;
 			operand_b <= 0;
-			branch_dest <= 0;
-			dest <= 0;
-			func3 <= 0;
-			func7 <= 0;
-
-			raddr1 <= 0;
-			raddr2 <= 0;
 		end else begin
 			is_store <= 1'b0;
 			is_load <= 1'b0;
