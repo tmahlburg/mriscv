@@ -5,7 +5,7 @@ module regs_tb();
 	integer fail;
 
 	/* adjust according to number of test cases */
-	localparam tests = 7;
+	localparam tests = 8;
 
 	reg clk, w_en;
 	integer clk_period;
@@ -122,6 +122,19 @@ module regs_tb();
 			pass = pass + 1;
 		end else begin
 			$display("FAILED: can change register content");
+			fail = fail + 1;
+		end
+
+		waddr = 31;
+		raddr2 = 31;
+
+		#10;
+
+		if (rdata2 === 2000) begin
+			$display("PASSED: x31 working as highest register");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: x31 working as highest register");
 			fail = fail + 1;
 		end
 
