@@ -92,7 +92,10 @@ module instr_decode_tb ();
 
 		reset = 0;
 
-		/* jal
+		/* lui : TODO */
+		/* auipc : TODO */
+
+		/* jal:
 		 * imm = 2000
 		 * rd = x3
 		 */
@@ -114,7 +117,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		/* jalr
+		/* jalr:
 		 * imm = 2000
 		 * rd = x2 (12345)
 		 * rs1 = x31
@@ -132,6 +135,34 @@ module instr_decode_tb ();
 		end
 
 		#(clk_period);
+
+		/* beq: TODO */
+		/* bne: TODO */
+		/* blt: TODO */
+		/* bge: TODO */
+		/* bltu: TODO */
+		/* bgeu: TODO */
+		/* lb, lh, lw, lbu, lhu: TODO */
+		/* sb, sh, sw: TODO */
+		/* addi: TODO */
+		/* slti: TODO */
+		/* sltiu: TODO */
+		/* xori: TODO */
+		/* ori: TODO */
+		/* andi: TODO */
+		/* slli: TODO */
+		/* srli: TODO */
+		/* srai: TODO */
+		/* add: TODO */
+		/* sub: TODO */
+		/* sll: TODO */
+		/* slt: TODO */
+		/* sltu: TODO */
+		/* xor: TODO */
+		/* srl: TODO */
+		/* sra: TODO */
+		/* or: TODO */
+		/* and: TODO */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
