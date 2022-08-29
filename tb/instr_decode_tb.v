@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 
+
 module instr_decode_tb ();
 	reg clk, reset;
 
@@ -27,7 +28,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 1;
+	localparam tests = 3;
 
 	reg [31:0] clk_period;
 
@@ -78,7 +79,7 @@ module instr_decode_tb ();
 		pass = 0;
 		fail = 0;
 
-		#10;
+		#(clk_period);
 
 		if ((is_store | is_load | is_branch | is_jump | is_reg
 			| is_alu | operand_a | operand_b | branch_dest
@@ -87,6 +88,44 @@ module instr_decode_tb ();
 			pass = pass + 1;
 		end else begin
 			$display("FAILED: reset");
+			fail = fail + 1;
+		end
+
+		reset = 0;
+
+		/* jal
+		 * imm = 2000
+		 * rd = x3
+		 */
+		instr = 32'b0111_1010_0000_1000_0000_0001_1110_1111;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_branch | is_reg) == 0) && (is_jump == 1'b1) && (operand_a == 2000) && (dest == 3)) begin
+			$display("PASSED: jal");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: jal");
+			fail = fail + 1;
+		end
+
+		/* jalr
+		 * imm = 2000
+		 * rd = x2
+		 * rs1 = x31
+		 */
+		instr = 32'b0111_1101_0000_1111_1000_0001_0110_0111;
+		waddr = 31;
+		wdata = 12345;
+		w_en = 1;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 2000) && (operand_b == 12345) && (dest == 2)) begin
+			$display("PASSED: jalr");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: jalr");
 			fail = fail + 1;
 		end
 
