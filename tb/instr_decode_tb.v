@@ -58,6 +58,7 @@ module instr_decode_tb ();
 	reg [31:0] wdata;
 
 	regs regs (
+		.clk(clk),
 		.w_en(w_en),
 		.raddr1(raddr1),
 		.raddr2(raddr2),
@@ -107,6 +108,10 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
+		waddr = 31;
+		wdata = 12345;
+		w_en = 1;
+
 		#(clk_period);
 
 		/* jalr
@@ -115,9 +120,6 @@ module instr_decode_tb ();
 		 * rs1 = x31
 		 */
 		instr = 32'b0111_1101_0000_1111_1000_0001_0110_0111;
-		waddr = 31;
-		wdata = 12345;
-		w_en = 1;
 
 		#(clk_period);
 
