@@ -41,7 +41,7 @@ module instr_decode (
 	assign func7 = reset ? 0 : instr[30];
 
 	assign dest = reset ? 0 : instr[11:7];
-	assign branch_dest = reset ? 0 : {{10{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
+	assign branch_dest = reset ? 0 : {{10{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
 
 	/* instr decode */
 	always @(posedge clk) begin
