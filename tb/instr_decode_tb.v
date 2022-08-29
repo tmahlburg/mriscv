@@ -95,7 +95,7 @@ module instr_decode_tb ();
 		 * imm = 2000
 		 * rd = x3
 		 */
-		instr = 32'b0111_1010_0000_1000_0000_0001_1110_1111;
+		instr = 32'b0111_1101_0000_0000_0000_0001_1110_1111;
 
 		#(clk_period);
 
@@ -121,7 +121,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 2000) && (operand_b == 12345) && (dest == 2)) begin
+		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 12345) && (operand_b == 2000) && (dest == 2)) begin
 			$display("PASSED: jalr");
 			pass = pass + 1;
 		end else begin
