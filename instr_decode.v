@@ -73,7 +73,11 @@ module instr_decode (
 					is_alu <= 1'b1;
 				end
 				/* I-type: short immediates, loads */
-				7'b1100111 || 7'b0000011 || 7'b0010011 || 7'b0001111 || 7'b1110011: begin
+				7'b1100111,
+				7'b0000011,
+				7'b0010011,
+				7'b0001111,
+				7'b1110011: begin
 					operand_a <= rs1;
 					operand_b <= {{20{instr[31]}}, instr[31:20]};
 					case (instr[6:0])
@@ -107,7 +111,8 @@ module instr_decode (
 					is_branch <= 1'b1;
 				end
 				/* U-type: long immediates */
-				7'b0110111 || 7'b0010111: begin
+				7'b0110111,
+				7'b0010111: begin
 					operand_a <= {instr[31:12], {12{1'b0}}};
 					is_load <= 1'b1;
 				end
