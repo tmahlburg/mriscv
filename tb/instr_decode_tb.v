@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module instr_decode_tb ();
 	reg clk, reset;
 
@@ -30,7 +29,7 @@ module instr_decode_tb ();
 	/* adjust according to the number of test cases */
 	localparam tests = 3;
 
-	reg [31:0] clk_period;
+	localparam clk_period = 10;
 
 	instr_decode dut (
 		.clk(clk),
@@ -74,7 +73,6 @@ module instr_decode_tb ();
 
 		reset = 1;
 		clk = 0;
-		clk_period = 10;
 
 		pass = 0;
 		fail = 0;
@@ -109,6 +107,8 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
+		#(clk_period);
+
 		/* jalr
 		 * imm = 2000
 		 * rd = x2
@@ -129,6 +129,7 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
+		#(clk_period);
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
