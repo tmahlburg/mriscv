@@ -164,15 +164,11 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
-
-		/* bne: TODO */
-		/* blt: TODO */
-		/* bge: TODO */
-		/* bltu: TODO */
-		/* bgeu: TODO */
+		/* bne, blt, bge, bltu, bgeu: mostly equivalent to beq */
 
 		/* lb, lh, lw, lbu, lhu: TODO */
 		/* sb, sh, sw: TODO */
+
 		/* addi: TODO */
 		/* slti: TODO */
 		/* sltiu: TODO */
