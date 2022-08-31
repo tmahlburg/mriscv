@@ -27,7 +27,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 4;
+	localparam tests = 5;
 
 	localparam clk_period = 10;
 
@@ -103,7 +103,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch | is_reg) == 0) && (is_jump == 1'b1) && (operand_a == 2000) && (dest == 3)) begin
+		if (((is_store | is_load | is_branch | is_reg | is_alu) == 0) && (is_jump == 1'b1) && (operand_a == 2000) && (dest == 3)) begin
 			$display("PASSED: jal");
 			pass = pass + 1;
 		end else begin
@@ -127,7 +127,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 12345) && (operand_b == 2000) && (dest == 2)) begin
+		if (((is_store | is_load | is_branch | is_alu) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 12345) && (operand_b == 2000) && (dest == 2)) begin
 			$display("PASSED: jalr");
 			pass = pass + 1;
 		end else begin
@@ -156,7 +156,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg) == 0) && (is_branch == 1'b1) && (operand_a == 9876) && (operand_b == 4567) && (branch_dest == 2000) && (func3 == 3'b000)) begin
+		if (((is_store | is_load | is_jump | is_reg | is_alu) == 0) && (is_branch == 1'b1) && (operand_a == 9876) && (operand_b == 4567) && (branch_dest == 2000) && (func3 == 3'b000)) begin
 			$display("PASSED: beq");
 			pass = pass + 1;
 		end else begin
@@ -169,15 +169,34 @@ module instr_decode_tb ();
 		/* lb, lh, lw, lbu, lhu: TODO */
 		/* sb, sh, sw: TODO */
 
-		/* addi: TODO */
-		/* slti: TODO */
-		/* sltiu: TODO */
-		/* xori: TODO */
-		/* ori: TODO */
-		/* andi: TODO */
-		/* slli: TODO */
-		/* srli: TODO */
-		/* srai: TODO */
+		w_en = 1;
+		waddr = 5;
+		wdata = 10;
+
+		#(clk_period);
+
+		w_en = 0;
+		/* andi:
+		 * imm: -2000
+		 * rs1: x5 (10)
+		 * rd: x31
+		 * func3: 111
+		 */
+		instr = 32'b1000_0011_0000_0010_1111_1111_1001_0011;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_jump | is_reg) == 0) && (is_alu == 1'b1) && (operand_a == 10) && ($signed(operand_b) == -2000) && (dest == 31) && (func3 == 3'b111)) begin
+			$display("PASSED: andi");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: andi");
+			fail = fail + 1;
+		end
+
+		/* addi, slti, sltiu, xori, ori, slli, srli, srai:
+		 * mostly equivalent to andi
+		 */
 		/* add: TODO */
 		/* sub: TODO */
 		/* sll: TODO */
