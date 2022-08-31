@@ -27,7 +27,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 3;
+	localparam tests = 4;
 
 	localparam clk_period = 10;
 
@@ -117,6 +117,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
+		w_en = 0;
 		/* jalr:
 		 * imm = 2000
 		 * rd = x2 (12345)
@@ -134,14 +135,42 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
+		w_en = 1;
+		waddr = 15;
+		wdata = 9876;
+
 		#(clk_period);
 
-		/* beq: TODO */
+		waddr = 14;
+		wdata = 4567;
+
+		#(clk_period);
+
+		w_en = 0;
+		/* beq:
+		 * imm = 2000
+		 * rs1 = x15 (9876)
+		 * rs2 = x14 (4567)
+		 */
+		instr = 32'b0111_1100_1110_0111_1000_0110_0011;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_jump | is_reg) == 0) && (is_branch == 1'b1) && (operand_a == 9876) && (operand_b == 4567) && (branch_dest == 2000) && (func3 == 3'b000)) begin
+			$display("PASSED: beq");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: beq");
+			fail = fail + 1;
+		end
+
+
 		/* bne: TODO */
 		/* blt: TODO */
 		/* bge: TODO */
 		/* bltu: TODO */
 		/* bgeu: TODO */
+
 		/* lb, lh, lw, lbu, lhu: TODO */
 		/* sb, sh, sw: TODO */
 		/* addi: TODO */
