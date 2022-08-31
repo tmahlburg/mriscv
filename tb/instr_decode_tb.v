@@ -27,7 +27,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 5;
+	localparam tests = 6;
 
 	localparam clk_period = 10;
 
@@ -186,7 +186,7 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg) == 0) && (is_alu == 1'b1) && (operand_a == 10) && ($signed(operand_b) == -2000) && (dest == 31) && (func3 == 3'b111)) begin
+		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 10) && ($signed(operand_b) == -2000) && (dest == 31) && (func3 == 3'b111)) begin
 			$display("PASSED: andi");
 			pass = pass + 1;
 		end else begin
@@ -198,7 +198,33 @@ module instr_decode_tb ();
 		 * mostly equivalent to andi
 		 */
 
-	    /* slli, srli, srai: TODO */
+	    w_en = 1;
+	    waddr = 3;
+	    wdata = 5000;
+
+		#(clk_period);
+
+	    w_en = 0;
+	    /* srai:
+	     * func7: 1
+	     * shamt: 10
+	     * rs1: 3 (5000)
+	     * func3: 101
+	     * rd: 13
+	     */
+		instr = 32'b0100_0000_1010_0001_1101_0110_1001_0011;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 5000) && (operand_b == 10) && (dest == 13) && (func7 == 1'b1) && (func3 == 3'b101)) begin
+			$display("PASSED: srai");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: srai");
+			fail = fail + 1;
+		end
+
+	    /* slli, srli: mostly equivalent to srai */
 
 		/* add: TODO */
 		/* sub: TODO */
