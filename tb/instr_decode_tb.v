@@ -27,7 +27,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 6;
+	localparam tests = 7;
 
 	localparam clk_period = 10;
 
@@ -226,9 +226,39 @@ module instr_decode_tb ();
 
 	    /* slli, srli: mostly equivalent to srai */
 
-		/* add: TODO */
-		/* sub: TODO */
-		/* sll, xor, srl, sra, or, and: mostly equivalent to add and sub */
+		w_en = 1;
+		waddr = 20;
+		wdata = 900;
+
+		#(clk_period);
+
+		waddr = 21;
+		wdata = 2000;
+
+		#(clk_period);
+
+		w_en = 0;
+		/* add:
+		 * f7: 0
+		 * rs2: 21(2000)
+		 * rs1: 20(900)
+		 * func3: 000
+		 * rd: 29
+		 */
+		instr = 32'b0000_0001_0101_1010_0000_1110_1011_0011;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 900) && (operand_b == 2000) && (dest == 29) && (func7 == 1'b0) && (func3 == 3'b000)) begin
+			$display("PASSED: add");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: add");
+			fail = fail + 1;
+		end
+
+		/* sub, sll, xor, srl, sra, or, and: mostly equivalent to add */
+
 		/* slt: TODO */
 		/* sltu: mostly equivalent to slt */
 
