@@ -194,19 +194,17 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
-		/* addi, slti, sltiu, xori, ori, slli, srli, srai:
+		/* addi, slti, sltiu, xori, ori:
 		 * mostly equivalent to andi
 		 */
+
+	    /* slli, srli, srai: TODO */
+
 		/* add: TODO */
 		/* sub: TODO */
-		/* sll: TODO */
+		/* sll, xor, srl, sra, or, and: mostly equivalent to add and sub */
 		/* slt: TODO */
-		/* sltu: TODO */
-		/* xor: TODO */
-		/* srl: TODO */
-		/* sra: TODO */
-		/* or: TODO */
-		/* and: TODO */
+		/* sltu: mostly equivalent to slt */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
