@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module instr_decode_tb ();
 	reg clk, reset;
 
@@ -30,7 +29,7 @@ module instr_decode_tb ();
 	/* adjust according to the number of test cases */
 	localparam tests = 3;
 
-	reg [31:0] clk_period;
+	localparam clk_period = 10;
 
 	instr_decode dut (
 		.clk(clk),
@@ -59,6 +58,7 @@ module instr_decode_tb ();
 	reg [31:0] wdata;
 
 	regs regs (
+		.clk(clk),
 		.w_en(w_en),
 		.raddr1(raddr1),
 		.raddr2(raddr2),
@@ -74,7 +74,6 @@ module instr_decode_tb ();
 
 		reset = 1;
 		clk = 0;
-		clk_period = 10;
 
 		pass = 0;
 		fail = 0;
@@ -93,11 +92,14 @@ module instr_decode_tb ();
 
 		reset = 0;
 
-		/* jal
+		/* lui : TODO */
+		/* auipc : TODO */
+
+		/* jal:
 		 * imm = 2000
 		 * rd = x3
 		 */
-		instr = 32'b0111_1010_0000_1000_0000_0001_1110_1111;
+		instr = 32'b0111_1101_0000_0000_0000_0001_1110_1111;
 
 		#(clk_period);
 
@@ -109,19 +111,22 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
-		/* jalr
-		 * imm = 2000
-		 * rd = x2
-		 * rs1 = x31
-		 */
-		instr = 32'b0111_1101_0000_1111_1000_0001_0110_0111;
 		waddr = 31;
 		wdata = 12345;
 		w_en = 1;
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 2000) && (operand_b == 12345) && (dest == 2)) begin
+		/* jalr:
+		 * imm = 2000
+		 * rd = x2 (12345)
+		 * rs1 = x31
+		 */
+		instr = 32'b0111_1101_0000_1111_1000_0001_0110_0111;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_branch) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 12345) && (operand_b == 2000) && (dest == 2)) begin
 			$display("PASSED: jalr");
 			pass = pass + 1;
 		end else begin
@@ -129,6 +134,35 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
+		#(clk_period);
+
+		/* beq: TODO */
+		/* bne: TODO */
+		/* blt: TODO */
+		/* bge: TODO */
+		/* bltu: TODO */
+		/* bgeu: TODO */
+		/* lb, lh, lw, lbu, lhu: TODO */
+		/* sb, sh, sw: TODO */
+		/* addi: TODO */
+		/* slti: TODO */
+		/* sltiu: TODO */
+		/* xori: TODO */
+		/* ori: TODO */
+		/* andi: TODO */
+		/* slli: TODO */
+		/* srli: TODO */
+		/* srai: TODO */
+		/* add: TODO */
+		/* sub: TODO */
+		/* sll: TODO */
+		/* slt: TODO */
+		/* sltu: TODO */
+		/* xor: TODO */
+		/* srl: TODO */
+		/* sra: TODO */
+		/* or: TODO */
+		/* and: TODO */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");

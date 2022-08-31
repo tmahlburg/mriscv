@@ -41,7 +41,7 @@ module instr_decode (
 	assign func7 = reset ? 0 : instr[30];
 
 	assign dest = reset ? 0 : instr[11:7];
-	assign branch_dest = reset ? 0 : {{10{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
+	assign branch_dest = reset ? 0 : {{10{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
 
 	/* instr decode */
 	always @(posedge clk) begin
@@ -73,7 +73,11 @@ module instr_decode (
 					is_alu <= 1'b1;
 				end
 				/* I-type: short immediates, loads */
-				7'b1100111 || 7'b0000011 || 7'b0010011 || 7'b0001111 || 7'b1110011: begin
+				7'b1100111,
+				7'b0000011,
+				7'b0010011,
+				7'b0001111,
+				7'b1110011: begin
 					operand_a <= rs1;
 					operand_b <= {{20{instr[31]}}, instr[31:20]};
 					case (instr[6:0])
@@ -107,13 +111,14 @@ module instr_decode (
 					is_branch <= 1'b1;
 				end
 				/* U-type: long immediates */
-				7'b0110111 || 7'b0010111: begin
-					operand_a <= {instr[31:12], 12'b000000000000};
+				7'b0110111,
+				7'b0010111: begin
+					operand_a <= {instr[31:12], {12{1'b0}}};
 					is_load <= 1'b1;
 				end
 				/* J-type: unconditional jumps */
 				7'b1101111: begin
-					operand_a <= {11'b00000000000, instr[31], instr[19:12], instr[20], instr[30:21]};
+					operand_a <= {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
 					is_jump <= 1'b1;
 				end
 				default: ; /* unknown opcode */
