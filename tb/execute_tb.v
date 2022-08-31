@@ -23,7 +23,9 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 0;
+	localparam tests = 1;
+
+	localparam clk_period = 10;
 
 	execute dut (
 		.clk(clk),
@@ -51,13 +53,22 @@ module execute_tb ();
 		$dumpvars(0, execute_tb);
 
 		reset = 0;
+		clk = 0;
 
 		pass = 0;
 		fail = 0;
 
-		#10;
+		#(clk_period);
 		reset = 1;
-		#10;
+		#(clk_period);
+
+		if ((dest_o == 0) && (result == 0) && (next_pc == 0)) begin
+			$display("PASSED: reset");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: reset");
+			fail = fail + 1;
+		end
 
 		/* TEST CASES */
 
@@ -72,4 +83,7 @@ module execute_tb ();
 		$display("%0d/%0d PASSED", pass, (tests + 1));
 		$finish;
 	end
+
+	always #(clk_period / 2.0) clk <= ~clk;
+
 endmodule
