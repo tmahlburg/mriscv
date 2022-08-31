@@ -3,3 +3,5 @@ mriscv.cache/*
 mriscv.hw/*
 mriscv.runs/*
 *.xpr
+*.vcd
+*_tb
