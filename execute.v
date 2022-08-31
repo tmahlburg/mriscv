@@ -65,7 +65,7 @@ module execute (
 					end
 				end
 				is_jump: begin
-					result = curr_pc + 4;
+					result <= curr_pc + 4;
 					/* when there is no destination specified, register x1 is assumed */
 					if (dest_i == 5'b00000) begin
 						dest_o <= 5'b00001;
