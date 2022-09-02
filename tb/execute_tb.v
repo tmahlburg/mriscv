@@ -4,6 +4,7 @@ module execute_tb ();
 	reg clk, reset;
 
 	reg is_store, is_load;
+	reg is_ui, add_pc;
 	reg is_branch, is_jump, is_reg;
 	reg is_alu;
 
@@ -23,7 +24,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 14;
+	localparam tests = 15;
 
 	localparam clk_period = 10;
 
@@ -32,6 +33,8 @@ module execute_tb ();
 		.reset(reset),
 		.is_store(is_store),
 		.is_load(is_load),
+		.is_ui(is_ui),
+		.add_pc(add_pc),
 		.is_branch(is_branch),
 		.is_jump(is_jump),
 		.is_reg(is_reg),
@@ -323,6 +326,25 @@ module execute_tb ();
 			pass = pass + 1;
 		end else begin
 			$display("FAILED: sltu, setting 0");
+			fail = fail + 1;
+		end
+
+		/* ui */
+
+		/* lui */
+		is_alu = 1'b0;
+		is_ui = 1'b1;
+		operand_a = 8192;
+		dest_i = 1;
+		curr_pc = 4;
+
+		#(clk_period);
+
+		if ((result == 8192) && (next_pc == 8) && (dest_o == 1)) begin
+			$display("PASSED: lui");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: lui");
 			fail = fail + 1;
 		end
 
