@@ -24,7 +24,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 15;
+	localparam tests = 16;
 
 	localparam clk_period = 10;
 
@@ -345,6 +345,22 @@ module execute_tb ();
 			pass = pass + 1;
 		end else begin
 			$display("FAILED: lui");
+			fail = fail + 1;
+		end
+
+		/* auipc */
+		add_pc = 1'b1;
+		operand_a = 16334;
+		dest_i = 4;
+		curr_pc = 16;
+
+		#(clk_period);
+
+		if ((result == 16350) && (next_pc == 20) && (dest_o == 4)) begin
+			$display("PASSED: auipc");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: auipc");
 			fail = fail + 1;
 		end
 
