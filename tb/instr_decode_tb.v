@@ -7,6 +7,8 @@ module instr_decode_tb ();
 
 	wire is_store, is_load;
 
+	wire is_ui, add_pc;
+
 	wire is_branch, is_jump, is_reg;
 
 	wire is_alu;
@@ -27,7 +29,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 7;
+	localparam tests = 8;
 
 	localparam clk_period = 10;
 
@@ -37,6 +39,8 @@ module instr_decode_tb ();
 		.instr(instr),
 		.is_store(is_store),
 		.is_load(is_load),
+		.is_ui(is_ui),
+		.add_pc(add_pc),
 		.is_branch(is_branch),
 		.is_jump(is_jump),
 		.is_reg(is_reg),
@@ -80,9 +84,12 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if ((is_store | is_load | is_branch | is_jump | is_reg
-			| is_alu | operand_a | operand_b | branch_dest
-			| dest | func3 | func7 | raddr1 | raddr2) == 0) begin
+		if ((is_store | is_load
+			| is_ui | add_pc
+			| is_branch | is_jump | is_reg
+			| is_alu
+			| operand_a | operand_b | branch_dest | dest
+			| func3	| func7 | raddr1 | raddr2) == 0) begin
 			$display("PASSED: reset");
 			pass = pass + 1;
 		end else begin
@@ -103,7 +110,10 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch | is_reg | is_alu) == 0) && (is_jump == 1'b1) && (operand_a == 2000) && (dest == 3)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_branch | is_reg | is_alu) == 0)
+			&& (is_jump == 1'b1)
+			&& (operand_a == 2000)
+			&& (dest == 3)) begin
 			$display("PASSED: jal");
 			pass = pass + 1;
 		end else begin
@@ -127,7 +137,11 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_branch | is_alu) == 0) && ((is_jump & is_reg) == 1'b1) && (operand_a == 12345) && (operand_b == 2000) && (dest == 2)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_branch | is_alu) == 0)
+			&& ((is_jump & is_reg) == 1'b1)
+			&& (operand_a == 12345)
+			&& (operand_b == 2000)
+			&& (dest == 2)) begin
 			$display("PASSED: jalr");
 			pass = pass + 1;
 		end else begin
@@ -156,7 +170,12 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg | is_alu) == 0) && (is_branch == 1'b1) && (operand_a == 9876) && (operand_b == 4567) && (branch_dest == 2000) && (func3 == 3'b000)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_jump | is_reg | is_alu) == 0)
+			&& (is_branch == 1'b1)
+			&& (operand_a == 9876)
+			&& (operand_b == 4567)
+			&& (branch_dest == 2000)
+			&& (func3 == 3'b000)) begin
 			$display("PASSED: beq");
 			pass = pass + 1;
 		end else begin
@@ -186,7 +205,12 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 10) && ($signed(operand_b) == -2000) && (dest == 31) && (func3 == 3'b111)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_jump | is_reg | is_branch) == 0)
+			&& (is_alu == 1'b1)
+			&& (operand_a == 10)
+			&& ($signed(operand_b) == -2000)
+			&& (dest == 31)
+			&& (func3 == 3'b111)) begin
 			$display("PASSED: andi");
 			pass = pass + 1;
 		end else begin
@@ -216,7 +240,13 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 5000) && (operand_b == 10) && (dest == 13) && (func7 == 1'b1) && (func3 == 3'b101)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_jump | is_reg | is_branch) == 0)
+			&& (is_alu == 1'b1)
+			&& (operand_a == 5000)
+			&& (operand_b == 10)
+			&& (dest == 13)
+			&& (func7 == 1'b1)
+			&& (func3 == 3'b101)) begin
 			$display("PASSED: srai");
 			pass = pass + 1;
 		end else begin
@@ -249,7 +279,13 @@ module instr_decode_tb ();
 
 		#(clk_period);
 
-		if (((is_store | is_load | is_jump | is_reg | is_branch) == 0) && (is_alu == 1'b1) && (operand_a == 900) && (operand_b == 2000) && (dest == 29) && (func7 == 1'b0) && (func3 == 3'b000)) begin
+		if (((is_store | is_load | is_ui | add_pc | is_jump | is_reg | is_branch) == 0)
+			&& (is_alu == 1'b1)
+			&& (operand_a == 900)
+			&& (operand_b == 2000)
+			&& (dest == 29)
+			&& (func7 == 1'b0)
+			&& (func3 == 3'b000)) begin
 			$display("PASSED: add");
 			pass = pass + 1;
 		end else begin
@@ -258,6 +294,30 @@ module instr_decode_tb ();
 		end
 
 		/* sub, sll, xor, srl, sra, or, and, slt, sltu: mostly equivalent to add */
+
+		/* lui
+		 * imm: 4096
+		 * rd: 5
+		 */
+		 instr = 32'b0000_0000_0000_0000_0001_0010_1011_0111;
+
+		 #(clk_period);
+
+		if (((is_store | is_load | add_pc | is_jump | is_reg | is_branch | is_alu) == 0)
+			&& (is_ui == 1'b1)
+			&& (operand_a == 4096)
+			&& (dest == 5)) begin
+			$display("PASSED: lui");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: lui");
+			fail = fail + 1;
+		end
+
+		/* auipc
+		 * imm:
+		 * rd:
+		 */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
