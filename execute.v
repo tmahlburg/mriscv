@@ -122,9 +122,7 @@ module execute (
 	/* needed to calculate next_pc in one clock cycle */
 	always @* begin
 		if (!is_jump) begin
-			$display("should go here");
 			if (branch) begin
-				$display("and here");
 				next_pc = curr_pc + branch_dest;
 			end else begin
 				next_pc = curr_pc + 4;
