@@ -59,6 +59,7 @@ module execute (
 						/* bgeu */
 						3'b111: branch <= ($unsigned(operand_a) >= $unsigned(operand_b));
 					endcase
+					dest_o <= 0;
 				end
 
 				is_jump: begin
