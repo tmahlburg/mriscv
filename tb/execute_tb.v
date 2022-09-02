@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 12;
+	localparam tests = 13;
 
 	localparam clk_period = 10;
 
@@ -292,6 +292,22 @@ module execute_tb ();
 			fail = fail + 1;
 		end
 
+		/* slt: set 1 */
+		func3 = 3'b010;
+		operand_a = -200;
+		operand_b = 100;
+		dest_i = 1;
+		curr_pc = 20;
+
+		#(clk_period);
+
+		if ((result == 1) && (next_pc == 24) && (dest_o == 1)) begin
+			$display("PASSED: slt, setting 1");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: slt, setting 1");
+			fail = fail + 1;
+		end
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
