@@ -91,6 +91,7 @@ module instr_decode (
 						end
 						7'b0010011: begin
 							is_alu <= 1'b1;
+							/* TODO: shamt[5] != 0 ? illegal */
 							/* is shift operation? operand_b = shamt */
 							if (func3 == 3'b001 || func3 == 3'b101) begin
 								operand_b <= instr[24:20];
