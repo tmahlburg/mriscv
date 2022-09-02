@@ -164,12 +164,12 @@ module execute_tb ();
 		is_branch = 1'b0;
 		is_jump = 1'b1;
 		operand_a = 20000;
-		dest_i = 31;
+		dest_i = 0;
 		curr_pc = 20;
 
 		#(clk_period);
 
-		if ((result == 24) && (next_pc == 20020) && (dest_o == 31)) begin
+		if ((result == 24) && (next_pc == 20020) && (dest_o == 1)) begin
 			$display("PASSED: jal");
 			pass = pass + 1;
 		end else begin
