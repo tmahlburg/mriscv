@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 9;
+	localparam tests = 10;
 
 	localparam clk_period = 10;
 
@@ -236,6 +236,26 @@ module execute_tb ();
 		end
 
 		/* and, or, xor: mostly equivalent to add and sub */
+
+		/* sll */
+		func3 = 3'b001;
+		operand_a = 32'b1101_1010_1101_0001_1111_0011_1010_0111;
+		/* should be interpreted as 16 by execute unit */
+		operand_b = 32'b0000_0000_1000_0011_1111_0101_0001_0000;
+		dest_i = 5;
+		curr_pc = 24;
+
+		#(clk_period);
+
+		if ((result == 32'b1111_0011_1010_0111_0000_0000_0000_0000) && (next_pc == 28) && (dest_o == dest_i)) begin
+			$display("PASSED: sll");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: sll");
+			fail = fail + 1;
+		end
+
+
 		/* sll, srl, sra: TODO */
 
 		if ((pass + fail) == tests) begin
