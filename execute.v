@@ -113,7 +113,6 @@ module execute (
 							end
 						end
 					endcase
-					next_pc <= curr_pc + 4;
 				end
 			endcase
 
