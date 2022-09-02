@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 4;
+	localparam tests = 5;
 
 	localparam clk_period = 10;
 
@@ -139,6 +139,25 @@ module execute_tb ();
 			$display("FAILED: bge, branching");
 			fail = fail + 1;
 		end
+
+		/* bltu -> false */
+		func3 = 3'b110;
+		operand_a = 2200000000;
+		operand_b = 10;
+		curr_pc = 20;
+		branch_dest = 400;
+		/* target_pc = 24 (no branch) */
+
+		#(clk_period);
+
+		if ((next_pc == 24) && (dest_o == 0)) begin
+			$display("PASSED: bltu, not branching");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: bltu, not branching");
+			fail = fail + 1;
+		end
+
 
 
 		if ((pass + fail) == tests) begin
