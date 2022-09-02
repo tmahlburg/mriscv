@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 2;
+	localparam tests = 3;
 
 	localparam clk_period = 10;
 
@@ -78,7 +78,7 @@ module execute_tb ();
 
 		/* branch */
 
-		/* beq */
+		/* beq -> true */
 		is_jump = 1'b0;
 		is_reg = 1'b0;
 		is_alu = 1'b0;
@@ -90,19 +90,38 @@ module execute_tb ();
 		operand_b = 200;
 		curr_pc = 20;
 		branch_dest = 20;
-		/* target pc = 40 */
+		/* target pc: 40 */
 		/* dest needed to test, if it is unchanged */
 		dest_i = 10;
 
 		#(clk_period);
 
-		if ((next_pc == 40) && (dest_o == 10)) begin
-			$display("PASSED: beq");
+		if ((next_pc == 40) && (dest_o == 0)) begin
+			$display("PASSED: beq, branching");
 			pass = pass + 1;
 		end else begin
-			$display("FAILED: beq");
+			$display("FAILED: beq, branching");
 			fail = fail + 1;
 		end
+
+		/* blt -> false */
+		func3 = 3'b100;
+		operand_a = 100;
+		operand_b = -300;
+		curr_pc = 40;
+		branch_dest = 20;
+		/* target pc: 44 (no branch) */
+
+		#(clk_period);
+
+		if ((next_pc == 44) && (dest_o == 0)) begin
+			$display("PASSED: blt, not branching");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: blt, not branching");
+			fail = fail + 1;
+		end
+
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
