@@ -29,7 +29,7 @@ module instr_decode_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 8;
+	localparam tests = 9;
 
 	localparam clk_period = 10;
 
@@ -98,9 +98,6 @@ module instr_decode_tb ();
 		end
 
 		reset = 0;
-
-		/* lui : TODO */
-		/* auipc : TODO */
 
 		/* jal:
 		 * imm = 2000
@@ -315,9 +312,23 @@ module instr_decode_tb ();
 		end
 
 		/* auipc
-		 * imm:
-		 * rd:
+		 * imm: 8192
+		 * rd: 2
 		 */
+		instr = 32'b0000_0000_0000_0000_0010_0001_0001_0111;
+
+		#(clk_period);
+
+		if (((is_store | is_load | is_jump | is_reg | is_branch | is_alu) == 0)
+			&& ((is_ui & add_pc) == 1)
+			&& (operand_a == 8192)
+			&& (dest == 2)) begin
+			$display("PASSED: auipc");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: auipc");
+			fail = fail + 1;
+		end
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
