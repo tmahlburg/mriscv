@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 1;
+	localparam tests = 2;
 
 	localparam clk_period = 10;
 
@@ -70,7 +70,39 @@ module execute_tb ();
 			fail = fail + 1;
 		end
 
-		/* TEST CASES */
+		reset = 0;
+
+		#(clk_period);
+
+		/* load / store: TODO */
+
+		/* branch */
+
+		/* beq */
+		is_jump = 1'b0;
+		is_reg = 1'b0;
+		is_alu = 1'b0;
+		is_load = 1'b0;
+		is_store = 1'b0;
+		is_branch = 1'b1;
+		func3 = 3'b000;
+		operand_a = 200;
+		operand_b = 200;
+		curr_pc = 20;
+		branch_dest = 20;
+		/* target pc = 40 */
+		/* dest needed to test, if it is unchanged */
+		dest_i = 10;
+
+		#(clk_period);
+
+		if ((next_pc == 40) && (dest_o == 10)) begin
+			$display("PASSED: beq");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: beq");
+			fail = fail + 1;
+		end
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
