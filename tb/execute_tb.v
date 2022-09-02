@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 7;
+	localparam tests = 8;
 
 	localparam clk_period = 10;
 
@@ -194,8 +194,29 @@ module execute_tb ();
 			fail = fail + 1;
 		end
 
-		/* TODO: */
 		/* alu */
+
+		/* add */
+		is_reg = 1'b0;
+		is_jump = 1'b0;
+		is_alu = 1'b1;
+		func3 = 3'b000;
+		func7 = 1'b0;
+		operand_a = 100;
+		operand_b = -200;
+		dest_i = 9;
+		curr_pc = 8;
+
+		#(clk_period);
+
+		if ((result == -100) && (next_pc == 12) && (dest_o == 9)) begin
+			$display("PASSED: add");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: add");
+			fail = fail + 1;
+		end
+
 		/* add, sub, and, or, xor */
 		/* sll, srl, sra */
 
