@@ -33,12 +33,11 @@ module execute (
 		if (reset) begin
 			dest_o <= 0;
 			result <= 0;
-			next_pc <= 0;
+			branch <= 1'b0;
+			next_pc <= 1'b0;
 		end else begin
 			dest_o <= dest_i;
 			branch <= 1'b0;
-
-			next_pc <= curr_pc + 4;
 
 			case (1'b1)
 				is_store: ; /* TODO */
@@ -60,10 +59,8 @@ module execute (
 						/* bgeu */
 						3'b111: branch <= ($unsigned(operand_a) >= $unsigned(operand_b));
 					endcase
-					if (branch) begin
-						next_pc <= curr_pc + branch_dest;
-					end
 				end
+
 				is_jump: begin
 					result <= curr_pc + 4;
 					/* when there is no destination specified, register x1 is assumed */
@@ -75,6 +72,7 @@ module execute (
 					end else begin
 						next_pc <= curr_pc + operand_a;
 					end
+					branch <= 1'b1;
 				end
 
 				is_alu: begin
@@ -114,8 +112,23 @@ module execute (
 							end
 						end
 					endcase
+					next_pc <= curr_pc + 4;
 				end
 			endcase
+
+		end
+	end
+
+	/* needed to calculate next_pc in one clock cycle */
+	always @* begin
+		if (!is_jump) begin
+			$display("should go here");
+			if (branch) begin
+				$display("and here");
+				next_pc = curr_pc + branch_dest;
+			end else begin
+				next_pc = curr_pc + 4;
+			end
 		end
 	end
 
