@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 6;
+	localparam tests = 7;
 
 	localparam clk_period = 10;
 
@@ -174,6 +174,23 @@ module execute_tb ();
 			pass = pass + 1;
 		end else begin
 			$display("FAILED: jal");
+			fail = fail + 1;
+		end
+
+		/* jalr */
+		is_reg = 1'b1;
+		operand_a = 32;
+		operand_b = 16;
+		dest_i = 11;
+		curr_pc = 4;
+
+		#(clk_period);
+
+		if ((result == 8) && (next_pc == (48 & ~1)) && (dest_o == 11)) begin
+			$display("PASSED: jalr");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: jalr");
 			fail = fail + 1;
 		end
 
