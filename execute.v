@@ -86,6 +86,14 @@ module execute (
 								result <= operand_a - operand_b;
 							end
 						end
+						/* slt */
+						3'b010: begin
+							result <= (operand_a < operand_b);
+						end
+						/* sltu */
+						3'b011: begin
+							result <= ($unsigned(operand_a) < $unsigned(operand_b));
+						end
 						/* and */
 						3'b111: begin
 							result <= operand_a & operand_b;
