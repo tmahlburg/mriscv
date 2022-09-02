@@ -257,10 +257,7 @@ module instr_decode_tb ();
 			fail = fail + 1;
 		end
 
-		/* sub, sll, xor, srl, sra, or, and: mostly equivalent to add */
-
-		/* slt: TODO */
-		/* sltu: mostly equivalent to slt */
+		/* sub, sll, xor, srl, sra, or, and, slt, sltu: mostly equivalent to add */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
