@@ -23,7 +23,7 @@ module execute_tb ();
 	integer fail;
 
 	/* adjust according to the number of test cases */
-	localparam tests = 11;
+	localparam tests = 12;
 
 	localparam clk_period = 10;
 
@@ -274,7 +274,24 @@ module execute_tb ();
 			fail = fail + 1;
 		end
 
-		/* srl, sra: TODO */
+		/* sra */
+		func7 = 1'b1;
+		operand_a = 32'b1111_1001_1001_0011_0110_1111_0000_0100;
+		/* should be interpreted as 24 by execute unit */
+		operand_b = 32'b1001_1001_1111_1111_0000_0000_1001_1000;
+		dest_i = 31;
+		curr_pc = 80;
+
+		#(clk_period);
+
+		if ((result == 32'b1111_1111_1111_1111_1111_1111_1111_1001) && (next_pc == 84) && (dest_o == 31)) begin
+			$display("PASSED: sra");
+			pass = pass + 1;
+		end else begin
+			$display("FAILED: sra");
+			fail = fail + 1;
+		end
+
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
