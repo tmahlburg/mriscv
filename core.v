@@ -1,7 +1,7 @@
 timescale 1ns / 1ps
 
 module core (
-	input clk, reset
+	input clk, reset,
 
 	input [31:0] instr
 );
@@ -11,7 +11,7 @@ module core (
 	reg is_alu;
 	reg [31:0] operand_a, operand_b;
 	wire [31:0] branch_dest;
-	wire [4:0] dest_i;
+	wire [4:0] dest_instr;
 	wire [2:0] func3;
 	wire func7;
 
@@ -28,15 +28,15 @@ module core (
 		.is_load(is_load),
 
 		.is_branch(is_branch),
-		.is_reg(is_reg),
 		.is_jump(is_jump),
+		.is_reg(is_reg),
 
 		.is_alu(is_alu),
 
 		.operand_a(operand_a),
 		.operand_b(operand_b),
 		.branch_dest(branch_dest),
-		.dest(dest),
+		.dest(dest_instr),
 		.func3(func3),
 		.func7(func7),
 
@@ -46,14 +46,22 @@ module core (
 		.raddr2(raddr2)
 	);
 
+	reg [31:0] wdata;
+	reg [4:0] waddr;
+	reg w_en;
+
 	regs regs (
+		.clk(clk),
+		.w_en(w_en),
+		.wdata(wdata),
+		.waddr(waddr),
 		.raddr1(raddr1),
 		.raddr2(raddr2),
 		.rdata1(rdata1),
 		.rdata2(rdata2)
 	);
 
-	reg [4:0] dest_e;
+	reg [4:0] dest_exec;
 	reg [31:0] result;
 
 	reg [31:0] curr_pc, next_pc;
@@ -74,8 +82,8 @@ module core (
 		.operand_a(operand_a),
 		.operand_b(operand_b),
 		.branch_dest(branch_dest),
-		.dest_i(dest),
-		.dest_o(dest_e),
+		.dest_i(dest_instr),
+		.dest_o(dest_exec),
 		.func3(func3),
 		.func7(func7),
 
