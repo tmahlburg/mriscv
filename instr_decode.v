@@ -9,6 +9,9 @@ module instr_decode (
 	output reg is_store,
 	output reg is_load,
 
+	output reg is_ui,
+	output reg add_pc,
+
 	output reg is_branch,
 	output reg is_jump,
 	output reg is_reg,
@@ -48,6 +51,8 @@ module instr_decode (
 		if (reset) begin
 			is_store <= 1'b0;
 			is_load <= 1'b0;
+			is_ui <= 1'b0;
+			add_pc <= 1'b0;
 			is_branch <= 1'b0;
 			is_jump <= 1'b0;
 			is_reg <= 1'b0;
@@ -58,6 +63,9 @@ module instr_decode (
 		end else begin
 			is_store <= 1'b0;
 			is_load <= 1'b0;
+
+			is_ui <= 1'b0;
+			add_pc <= 1'b0;
 
 			is_branch <= 1'b0;
 			is_jump <= 1'b0;
@@ -115,7 +123,10 @@ module instr_decode (
 				7'b0110111,
 				7'b0010111: begin
 					operand_a <= {instr[31:12], {12{1'b0}}};
-					is_load <= 1'b1;
+					is_ui <= 1'b1;
+					if (instr[6:0] == 7'b0010111) begin
+						add_pc <= 1'b1;
+					end
 				end
 				/* J-type: unconditional jumps */
 				7'b1101111: begin

@@ -6,6 +6,9 @@ module execute (
 	input is_store,
 	input is_load,
 
+	input is_ui,
+	input add_pc,
+
 	input is_branch,
 	input is_jump,
 	input is_reg,
@@ -43,6 +46,14 @@ module execute (
 				is_store: ; /* TODO */
 
 				is_load: ; /* TODO */
+
+				is_ui: begin
+					if (add_pc) begin
+						result <= curr_pc + operand_a;
+					end else begin
+						result <= operand_a;
+					end
+				end
 
 				is_branch: begin
 					case (func3)
