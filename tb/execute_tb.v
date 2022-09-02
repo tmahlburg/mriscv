@@ -194,6 +194,10 @@ module execute_tb ();
 			fail = fail + 1;
 		end
 
+		/* TODO: */
+		/* alu */
+		/* add, sub, and, or, xor */
+		/* sll, srl, sra */
 
 		if ((pass + fail) == tests) begin
 			$display("PASSED: number of test cases");
