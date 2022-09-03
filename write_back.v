@@ -1,6 +1,8 @@
 `timescale 1 ns / 1 ps
 
-module write_back (
+module write_back #(
+	parameter [31:0] STACK_ADDR = 0;
+) (
 	input clk,
 	input reset,
 
@@ -16,7 +18,7 @@ module write_back (
 );
 	always @(posedge clk) begin
 		if (reset) begin
-			pc <= 0;
+			pc <= STACK_ADDR;
 			w_en <= 0;
 			wdata <= 0;
 			waddr <= 0;
