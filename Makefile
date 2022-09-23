@@ -1,7 +1,7 @@
 VC = iverilog
 SIM = vvp
 
-test: regs_tb.vcd instr_decode_tb.vcd execute_tb.vcd
+test: regs_tb.vcd instr_decode_tb.vcd execute_tb.vcd write_back_tb.vcd
 
 
 regs_tb: regs.v tb/regs_tb.v
@@ -24,6 +24,12 @@ execute_tb: execute.v tb/execute_tb.v
 execute_tb.vcd: execute_tb
 	- $(SIM) execute_tb
 
+
+write_back_tb: regs.v write_back.v tb/write_back_tb.v
+	- $(VC) -o write_back_tb regs.v write_back.v tb/write_back_tb.v
+
+write_back_tb.vcd: write_back_tb
+	- $(SIM) write_back_tb
 
 clean:
 	- rm *_tb
